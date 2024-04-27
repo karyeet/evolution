@@ -1,8 +1,11 @@
+
 class npc {
     constructor(scene, x, y) {
         this.scene = scene;
         this.sprite = scene.physics.add.sprite(x, y, 'dot');
+        this.sprite.npc = this;
         this.cursors = scene.input.keyboard.createCursorKeys();
+        this.hunger = 15;
         scene.input.keyboard.on('keydown', this.handleKeyDown, this);
 
     }
@@ -80,24 +83,41 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var player;
+var npcs = [];
 var food;
 
 function preload() {
-    this.load.image('dot', 'https://labs.phaser.io/assets/sprites/white-dot.png');
-    this.load.image('food', 'https://labs.phaser.io/assets/sprites/food.png');
+    this.load.image('dot', './sprite1.png');
+    this.load.image('food', './hamburger.webp');
 }
 
 function create() {
-    player = new npc(this, 200, 200);
+    //player = new npc(this, 200, 200);
     food = this.physics.add.group();
-
-    this.time.addEvent({ delay: 3000, callback: createFood, callbackScope: this, loop: true });
+    npcs = [new npc(this, 200, 200),new npc(this, 300, 200),new npc(this, 400, 200)];
+    npcs[0].sprite.setScale(1);
+    this.time.addEvent({ delay: 1000, callback: createFood, callbackScope: this, loop: true });
+    this.time.addEvent({ delay: 1000, callback: tickHunger, callbackScope: this, loop: true });
 }
 
 function update() {
-    player.update();
-    this.physics.overlap(player.sprite, food, eatFood, null, this);
+    for (let npc of npcs) {
+        npc.update();
+        this.physics.overlap(npc.sprite, food, eatFood, null, this);
+    }
+}
+
+function tickHunger() {
+    for (let index in npcs){
+        spawnedNPC = npcs[index];
+        spawnedNPC.hunger -= 1;
+        if (spawnedNPC.hunger <= 0) {
+            spawnedNPC.sprite.destroy();
+            npcs.splice(index, 1);
+            delete spawnedNPC;
+        }  
+    }
+
 }
 
 function createFood() {
@@ -105,9 +125,12 @@ function createFood() {
     var y = Phaser.Math.Between(0, config.height);
 
     var newFood = food.create(x, y, 'food');
+    newFood.setScale(0.1);
 }
 
-function eatFood(player, food) {
+function eatFood(sprite, food) {
+    sprite.npc.hunger += 15;
+    console.log(sprite.npc.hunger);
     food.destroy();
 }
 
