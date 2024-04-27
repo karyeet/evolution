@@ -120,12 +120,7 @@ class npc {
 
 }
 
-// 
-class consumable {
-    constructor(posX, posY) {
 
-    }
-}
 
 let game = new Game(800, 600);
 game.spawnFriendly('npc1', 50, 100, 100);
