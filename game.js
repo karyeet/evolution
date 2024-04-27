@@ -10,9 +10,8 @@ class food {
         this.positionY = positionY
         
         this.gameArea = document.getElementById('gameArea')
-        this.gameArea.innerHTML += foodHTML.replace('idPlaceholder', elementId)
-        this.element = document.getElementById(elementId)
-
+        this.element = createElement(elementId, 'food');
+        this.gameArea.append(this.element);
         this.element.style.left = this.positionX + 'px';
         this.element.style.top = this.positionY + 'px';
 
@@ -124,4 +123,5 @@ class consumable {
 let game = new Game(800, 600);
 let npc1 = new npc('npc1', 50, 100, 100);
 let npc2 = new npc('npc2', 50, 200, 200);
+let food1 = new food('food1', 300, 300);
 game.gameLoop();
