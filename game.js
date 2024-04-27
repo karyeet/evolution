@@ -1,130 +1,113 @@
-"use strict"
-
-const npcHTML = '<div id="idPlaceholder" class="npc">';
-
-const foodHTML = '<div id="idPlaceholder" class="food"></div>';
-
-class food {
-    constructor(elementId, positionX, positionY) {
-        this.positionX = positionX
-        this.positionY = positionY
-        
-        this.gameArea = document.getElementById('gameArea')
-        this.element = createElement(elementId, 'food');
-        this.gameArea.append(this.element);
-        this.element.style.left = this.positionX + 'px';
-        this.element.style.top = this.positionY + 'px';
-
-    }
-}
-
-class Game {
-    constructor(gameAreaX, gameAreaY) {
-        this.friendlies = {}
-        this.baddies = {}
-        this.consumable = {}
-        this.element = document.getElementById('gameArea')
-        this.element.style.width = gameAreaX + 'px'
-        this.element.style.height = gameAreaY + 'px'
-    }
-
-    gameLoop() {
-        console.log("hello")
-        for (const key in this.friendlies) {
-            this.friendlies[key].moveForward();
-            this.friendlies[key].rotateLeft();
-        }
-        requestAnimationFrame(() => this.gameLoop());
-    }
-
-    spawnFriendly(elementId, size, positionX, positionY) {
-        this.friendlies[elementId] = new npc(elementId, size, positionX, positionY)
-    }
-    spawnFood(elementId, positionX, positionY) {
-        this.consumable[elementId] = new food(elementId, positionX, positionY)
-    }
-}
-
-function createElement(elementId, elementClass){
-    const element = document.createElement('div');
-    element.id = elementId;
-    element.classList.add(elementClass);
-    return element
-}
-
 class npc {
-    constructor(elementId, size, positionX, positionY) {
-        this.positionX = positionX
-        this.positionY = positionY
-        this.gameArea = document.getElementById('gameArea')
-        this.element = createElement(elementId, 'npc');
-        this.gameArea.append(this.element);
-        this.speed = 45
-        this.angle = 0
-        this.rotationSpeed = 5
+    constructor(scene, x, y) {
+        this.scene = scene;
+        this.sprite = scene.physics.add.sprite(x, y, 'dot');
+        this.cursors = scene.input.keyboard.createCursorKeys();
+        scene.input.keyboard.on('keydown', this.handleKeyDown, this);
+
+    }
+    movefoward() {
+        var angle = Phaser.Math.DegToRad(this.sprite.angle - 90);
+        this.sprite.setVelocityX(Math.cos(angle) * 200);
+        this.sprite.setVelocityY(Math.sin(angle) * 200);
+        
+    }
+    turnleft() {
+        this.sprite.angle -= 4;
+    }
+    turnright() {
+        this.sprite.angle += 4;
+    }
+    update() {
+        if (this.cursors.left.isDown) {
+            this.turnleft();
+        } else if (this.cursors.right.isDown) {
+            this.turnright();
+        }
+
+        var angle = Phaser.Math.DegToRad(this.sprite.angle - 90);
+        if (this.cursors.up.isDown) {
+            this.movefoward();
+        } else {
+            this.sprite.setVelocityX(0);
+            this.sprite.setVelocityY(0);
+        }
+
+        this.checkBounds();
     }
 
-    moveForward() {
-        this.positionX += Math.cos(this.angle * Math.PI / 180) * this.speed;
-        this.positionY += Math.sin(this.angle * Math.PI / 180) * this.speed;
-        this.checkBounds();
-        this.element.style.left = this.positionX + 'px';
-        this.element.style.top = this.positionY + 'px';
-    }
-    moveBackwards() {
-        this.positionX -= Math.cos(this.angle * Math.PI / 180) * this.speed;
-        this.positionY -= Math.sin(this.angle * Math.PI / 180) * this.speed;
-        this.checkBounds();
-        this.element.style.left = this.positionX + 'px';
-        this.element.style.top = this.positionY + 'px';
-    }
     checkBounds() {
-        const gameAreaWidth = parseInt(this.gameArea.style.width);
-        const gameAreaHeight = parseInt(this.gameArea.style.height);
-        const npcWidth = parseInt(this.element.style.width);
-        const npcHeight = parseInt(this.element.style.height);
+        const config = this.scene.game.config;
+        const npc = this.sprite;
 
-        if (this.positionX < 0) {
-            this.positionX = 0;
-        } else if (this.positionX > gameAreaWidth - npcWidth) {
-            this.positionX = gameAreaWidth - npcWidth;
+        if (npc.x < 0) {
+            npc.x = 0;
+        } else if (npc.x > config.width) {
+            npc.x = config.width;
         }
 
-        if (this.positionY < 0) {
-            this.positionY = 0;
-        } else if (this.positionY > gameAreaHeight - npcHeight) {
-            this.positionY = gameAreaHeight - npcHeight;
-        }
-
-        // Check the other two borders
-        if (this.positionX > gameAreaWidth) {
-            this.positionX = gameAreaWidth;
-        } else if (this.positionX < gameAreaWidth - npcWidth) {
-            this.positionX = gameAreaWidth - npcWidth;
-        }
-
-        if (this.positionY > gameAreaHeight) {
-            this.positionY = gameAreaHeight;
-        } else if (this.positionY < gameAreaHeight - npcHeight) {
-            this.positionY = gameAreaHeight - npcHeight;
+        if (npc.y < 0) {
+            npc.y = 0;
+        } else if (npc.y > config.height) {
+            npc.y = config.height;
         }
     }
-    rotateLeft() {
-        this.angle -= this.rotationSpeed
-        this.element.style.transform = 'rotate(' + this.angle + 'deg)'
-    }
-    rotateRight() {
-        this.angle += this.rotationSpeed
-        this.element.style.transform = 'rotate(' + this.angle + 'deg)'
-    }
 
+    handleKeyDown(event) {
+        if (event.code === 'KeyW' || event.code === 'KeyA' || event.code === 'KeyS' || event.code === 'KeyD') {
+            event.preventDefault();
+        }
+    }
 }
 
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 800,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 0 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
 
+var game = new Phaser.Game(config);
 
-let game = new Game(800, 600);
-game.spawnFriendly('npc1', 50, 100, 100);
-game.spawnFriendly('npc2', 50, 200, 200);
-game.spawnFood('food1', 300, 300);
+var player;
+var food;
 
-game.gameLoop();
+function preload() {
+    this.load.image('dot', 'https://labs.phaser.io/assets/sprites/white-dot.png');
+    this.load.image('food', 'https://labs.phaser.io/assets/sprites/food.png');
+}
+
+function create() {
+    player = new npc(this, 200, 200);
+    food = this.physics.add.group();
+
+    this.time.addEvent({ delay: 3000, callback: createFood, callbackScope: this, loop: true });
+}
+
+function update() {
+    player.update();
+    this.physics.overlap(player.sprite, food, eatFood, null, this);
+}
+
+function createFood() {
+    var x = Phaser.Math.Between(0, config.width);
+    var y = Phaser.Math.Between(0, config.height);
+
+    var newFood = food.create(x, y, 'food');
+}
+
+function eatFood(player, food) {
+    food.destroy();
+}
+
