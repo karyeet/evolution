@@ -30,11 +30,18 @@ class Game {
 
     gameLoop() {
         console.log("hello")
-        npc1.moveForward();
-        npc1.rotateLeft();
-        npc2.moveBackwards();
-        npc2.rotateRight();
+        for (const key in this.friendlies) {
+            this.friendlies[key].moveForward();
+            this.friendlies[key].rotateLeft();
+        }
         requestAnimationFrame(() => this.gameLoop());
+    }
+
+    spawnFriendly(elementId, size, positionX, positionY) {
+        this.friendlies[elementId] = new npc(elementId, size, positionX, positionY)
+    }
+    spawnFood(elementId, positionX, positionY) {
+        this.consumable[elementId] = new food(elementId, positionX, positionY)
     }
 }
 
@@ -121,7 +128,8 @@ class consumable {
 }
 
 let game = new Game(800, 600);
-let npc1 = new npc('npc1', 50, 100, 100);
-let npc2 = new npc('npc2', 50, 200, 200);
-let food1 = new food('food1', 300, 300);
+game.spawnFriendly('npc1', 50, 100, 100);
+game.spawnFriendly('npc2', 50, 200, 200);
+game.spawnFood('food1', 300, 300);
+
 game.gameLoop();
