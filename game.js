@@ -2,6 +2,22 @@
 
 const npcHTML = '<div id="idPlaceholder" class="npc">';
 
+const foodHTML = '<div id="idPlaceholder" class="food"></div>';
+
+class food {
+    constructor(elementId, positionX, positionY) {
+        this.positionX = positionX
+        this.positionY = positionY
+        
+        this.gameArea = document.getElementById('gameArea')
+        this.gameArea.innerHTML += foodHTML.replace('idPlaceholder', elementId)
+        this.element = document.getElementById(elementId)
+
+        this.element.style.left = this.positionX + 'px';
+        this.element.style.top = this.positionY + 'px';
+
+    }
+}
 
 class Game {
     constructor(gameAreaX, gameAreaY) {
@@ -17,8 +33,17 @@ class Game {
         console.log("hello")
         npc1.moveForward();
         npc1.rotateLeft();
+        npc2.moveBackwards();
+        npc2.rotateRight();
         requestAnimationFrame(() => this.gameLoop());
     }
+}
+
+function createElement(elementId, elementClass){
+    const element = document.createElement('div');
+    element.id = elementId;
+    element.classList.add(elementClass);
+    return element
 }
 
 class npc {
@@ -26,8 +51,8 @@ class npc {
         this.positionX = positionX
         this.positionY = positionY
         this.gameArea = document.getElementById('gameArea')
-        this.gameArea.innerHTML += npcHTML.replace('idPlaceholder', elementId)
-        this.element = document.getElementById(elementId)
+        this.element = createElement(elementId, 'npc');
+        this.gameArea.append(this.element);
         this.speed = 45
         this.angle = 0
         this.rotationSpeed = 5
@@ -86,12 +111,7 @@ class npc {
         this.angle += this.rotationSpeed
         this.element.style.transform = 'rotate(' + this.angle + 'deg)'
     }
-    moveBackwards() {
-        this.positionX -= Math.cos(this.angle * Math.PI / 180) * this.speed;
-        this.positionY -= Math.sin(this.angle * Math.PI / 180) * this.speed;
-        this.element.style.left = this.positionX + 'px';
-        this.element.style.top = this.positionY + 'px';
-    }
+
 }
 
 // 
@@ -103,5 +123,5 @@ class consumable {
 
 let game = new Game(800, 600);
 let npc1 = new npc('npc1', 50, 100, 100);
-
+let npc2 = new npc('npc2', 50, 200, 200);
 game.gameLoop();
