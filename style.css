@@ -4,3 +4,72 @@ body {
     align-items: center;
     background-color: #be1e36
 }
+canvas {
+    border: 10px solid #000;
+    z-index: 2;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(20px, 20px); }
+    100% { transform: translate(0, 0); }
+}
+
+#whiteblood-cell {
+    animation: float 2s ease-in-out infinite;
+}
+
+#virus {
+    animation: float 2s ease-in-out infinite;
+    animation-delay: 1s; /* Delay the start of the animation by 1 second */
+}
+
+h1 {
+    font-family: 'Arial', sans-serif;
+    font-size: 6em !important;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.whiteblood-cell1 {
+    position: fixed;
+    right: 10vw;
+    top: 40vh;
+    transform: translateY(-50%);
+    max-width: 40vw;
+    max-height: 40vh;
+    width: 10%;
+    height: auto;
+    z-index: 1;
+}
+
+.virus {
+    position: fixed;
+    left: 10vw;
+    top: 50vh;
+    transform: translateY(-50%);
+    max-width: 40vw;
+    max-height: 40vh;
+    width: 10%;
+    height: auto;
+    z-index: 1;
+}
+
+
+
+.github-link img{
+    width: 300px;
+    height: 300px;
+    animation: float 5s ease-in-out infinite;
+    position: fixed;
+    right: 15vw;
+    top: 75vh;
+    transform: translateY(-50%);
+    max-width: 40vw;
+    max-height: 40vh;
+    z-index: 1;
+}

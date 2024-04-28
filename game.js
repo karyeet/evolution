@@ -1,3 +1,30 @@
+window.addEventListener('load', function () {
+  var canvas = document.querySelector('canvas');
+  if (canvas) {
+    canvas.addEventListener('wheel', function (e) {
+      window.scrollBy(0, e.deltaY);
+      e.preventDefault();
+    }, false);
+  }
+
+  let cellImage = document.getElementById('whiteblood-cell');
+  let wbcImages = ['./white_blood_cell_1.png', './white_blood_cell_2.png'];
+  let currentImageWbc = 0;
+  setInterval(function () {
+    currentImageWbc = (currentImageWbc + 1) % wbcImages.length;
+    cellImage.src = wbcImages[currentImageWbc];
+  }, 800);
+
+  let virusImage = document.getElementById('virus');
+  let virusImages = ['./greenvirus1.png', './greenvirus3.png'];
+  let currentImageVirus = 0;
+  setInterval(function () {
+    currentImageVirus = (currentImageVirus + 1) % virusImages.length;
+    virusImage.src = virusImages[currentImageVirus];
+  }, 800);
+
+});
+
 let NEATconfig = {
   model: [
     // Angle to nearest food relative to world, current angle
