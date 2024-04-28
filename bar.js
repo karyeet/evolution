@@ -21,7 +21,7 @@ class bar {
     this.bar_border.x = this.sprite.x;
     this.bar_border.y = this.sprite.y;
 
-    const hunger_percent = 0.5;
+    const hunger_percent = Math.min(Math.max(this.npc.hunger / 150, 0.0), 1.0);
     this.bar.clear();
     this.bar.fillStyle(interpolate("#ff0000", "#00ff00", hunger_percent), 1);
     this.bar.fillRect(
