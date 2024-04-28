@@ -4,6 +4,7 @@ class npc {
         this.scene = scene;
         this.sprite = scene.physics.add.sprite(x, y, 'dot');
         this.sprite.npc = this;
+        this.sprite.setScale(0.5);
         this.cursors = scene.input.keyboard.createCursorKeys();
         this.hunger = 75;
         scene.input.keyboard.on('keydown', this.handleKeyDown, this);
@@ -189,8 +190,8 @@ class npc {
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 800,
+    width: 3000,
+    height: 3000,
     physics: {
         default: 'arcade',
         arcade: {
@@ -220,13 +221,20 @@ function create() {
     food = this.physics.add.group();
 
     this.time.addEvent({ delay: 3000, callback: createFood, callbackScope: this, loop: true });
-    npcs = [new npc(this, 200, 200),new npc(this, 300, 200),new npc(this, 400, 200)];
+    npcs = [];
+    runtimePrint("spawning 1000")
+    for (let i = 0; i < 1000; i++){
+        npcs.push(new npc(this, Phaser.Math.Between(0, config.width), Phaser.Math.Between(0, config.height)));
+    }
     npcs[0].sprite.setScale(1);
     this.time.addEvent({ delay: 1000, callback: createFood, callbackScope: this, loop: true });
     this.time.addEvent({ delay: 1000, callback: tickHunger, callbackScope: this, loop: true }); 
 }
 
 function update() {
+    if (npcs.length < 1){
+        runtimePrint("All NPC's dead")
+    }
     for (let npc of npcs) {
         npc.update();
         this.physics.overlap(npc.sprite, food, eatFood, null, this);
@@ -235,15 +243,16 @@ function update() {
 
 function tickHunger() {
     for (let index in npcs){
-        spawnedNPC = npcs[index];
+        let spawnedNPC = npcs[index];
+        //if(!spawnedNPC) continue;
         spawnedNPC.hunger -= 1;
         if (spawnedNPC.hunger <= 0) {
             spawnedNPC.sprite.destroy();
             npcs.splice(index, 1);
             delete spawnedNPC;
         }
-        if(spawnedNPC && spawnedNPC.hunger >= 150){
-            console.log("spawned")
+        if(spawnedNPC.hunger >= 150){
+            runtimePrint("spawned")
             npcs.push(new npc(this, spawnedNPC.sprite.x, spawnedNPC.sprite.y));
             spawnedNPC.hunger = 40;
         }
@@ -256,7 +265,7 @@ function createFood() {
     var y = Phaser.Math.Between(0, config.height);
 
     var newFood = food.create(x, y, 'food');
-    newFood.setScale(0.1);
+    newFood.setScale(0.05);
 }
 
 function eatFood(sprite, food) {
@@ -265,3 +274,5 @@ function eatFood(sprite, food) {
     food.destroy();
 }
 
+runtimePrint = console.log;
+console.log = ()=>{}; //disable console.log
