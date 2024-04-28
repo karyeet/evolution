@@ -213,11 +213,16 @@ var food;
 
 function preload() {
     this.load.image('dot', './white_blood_cell_1.png');
-    this.load.image('food', './hamburger.webp');
+    this.load.image('food', './greenvirus1.png');
+    this.load.image('background', './mcdonald.jpg');
 }
 
 function create() {
     //player = new npc(this, 200, 200);
+    // background
+    let bg = this.add.image(0,0, 'background').setOrigin(0,0);
+    bg.displayWidth = this.sys.game.config.width;
+    bg.displayHeight = this.sys.game.config.height;
     food = this.physics.add.group();
 
     this.time.addEvent({ delay: 3000, callback: createFood, callbackScope: this, loop: true });
@@ -226,7 +231,6 @@ function create() {
     for (let i = 0; i < 1000; i++){
         npcs.push(new npc(this, Phaser.Math.Between(0, config.width), Phaser.Math.Between(0, config.height)));
     }
-    npcs[0].sprite.setScale(1);
     this.time.addEvent({ delay: 1000, callback: createFood, callbackScope: this, loop: true });
     this.time.addEvent({ delay: 1000, callback: tickHunger, callbackScope: this, loop: true }); 
 }
@@ -265,7 +269,7 @@ function createFood() {
     var y = Phaser.Math.Between(0, config.height);
 
     var newFood = food.create(x, y, 'food');
-    newFood.setScale(0.05);
+    newFood.setScale(1);
 }
 
 function eatFood(sprite, food) {
