@@ -73,3 +73,16 @@ h1 {
     max-height: 40vh;
     z-index: 1;
 }
+
+.whiteblood-cell-chase {
+    position: fixed;
+    right: 10vw;
+    top: 10vh;
+    transform: translateY(-50%);
+    max-width: 10vw;
+    max-height: 10vh;
+    width: 1%;
+    height: auto;
+    z-index: 1;
+    pointer-events: none; 
+}

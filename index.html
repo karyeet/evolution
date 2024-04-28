@@ -1,28 +1,43 @@
 <html>
-  <head>
-    <link rel="stylesheet" href="style.css">
-    <!-- tailwind preflight -->
-    <link
-      href="https://unpkg.com/tailwindcss@3.4.3/src/css/preflight.css"
-      rel="stylesheet"
-    >
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser-arcade-physics.min.js"></script>
-    <script
-      language="javascript"
-      type="text/javascript"
-      src="./lib/NEAT_browser.js"
-    ></script>
-  </head>
-  <body>
-    <img class="whiteblood-cell1" id="whiteblood-cell" src="./white_blood_cell_1.png" alt="Whiteblood Cell">
-    <img class="virus" id="virus" src="./greenvirus1.png" alt="virus">
-    <h1>ImmunoQuest: Evolution in the Bloodstream</h1>
-    <script src="bar.js"></script>
-    <script src="npc.js"></script>
-    <script src="game.js"></script>
 
-    <a class="github-link" href="https://github.com/karyeet/evolution" target="_blank">
-        <img src="./gh.png" alt="GitHub Logo">
-    </a>
-  </body>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <!-- tailwind preflight -->
+  <link href="https://unpkg.com/tailwindcss@3.4.3/src/css/preflight.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser-arcade-physics.min.js"></script>
+  <script language="javascript" type="text/javascript" src="./lib/NEAT_browser.js"></script>
+</head>
+
+<body>
+  <img class="whiteblood-cell1" id="whiteblood-cell" src="./white_blood_cell_1.png" alt="Whiteblood Cell">
+  <img class="virus" id="virus" src="./greenvirus1.png" alt="virus">
+  <h1>ImmunoQuest: Evolution in the Bloodstream</h1>
+  <script src="bar.js"></script>
+  <script src="npc.js"></script>
+  <script src="game.js"></script>
+
+  <a class="github-link" href="https://github.com/karyeet/evolution" target="_blank">
+    <img src="./gh.png" alt="GitHub Logo">
+  </a>
+
+
+
+  <img class="whiteblood-cell-chase" id="chase-cell" src="./white_blood_cell_1.png" alt="Whiteblood Cell">
+
+  <script>
+    var wbcChaseImg = document.getElementById('chase-cell');
+
+    // Function to update the position of the white blood cell images
+    function updatePosition(x, y) {
+        wbcChaseImg.style.left = x + 'px';
+        wbcChaseImg.style.top = y + 'px';
+    }
+
+    // Listen for mousemove events
+    document.addEventListener('mousemove', function (event) {
+      updatePosition(event.clientX, event.clientY);
+    });
+  </script>
+</body>
+
 </html>
