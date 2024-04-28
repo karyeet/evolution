@@ -10,8 +10,8 @@ class npc {
         scene.input.keyboard.on('keydown', this.handleKeyDown, this);
         this.Pangle = 0;
         this.Brain = new Array(brainSize);
-        this.pX = 0;
-        this.pY = 0;
+        this.pX = this.sprite.x;
+        this.pY = this.sprite.y;
         this.pNearFood = 0;        
         this.nearFood = 0;
         this.nearAngle = 0;
@@ -55,7 +55,7 @@ class npc {
         var dist = Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, foodItem.x, foodItem.y);
             if (dist < nearestDist) {
                 nearestDist = dist;
-                nearestAngle = Phaser.Math.Angle.Between(this.sprite.x, sthis.sprite.y, foodItem.x, foodItem.y);
+                nearestAngle = Phaser.Math.Angle.Between(this.sprite.x, this.sprite.y, foodItem.x, foodItem.y);
             } 
         }
         return {
@@ -166,7 +166,7 @@ class npc {
         this.pX = this.sprite.x;
         this.pY = this.sprite.y;
         this.pNearFood = this.nearFood;
-        var temp = this.NearestFood
+        var temp = this.NearestFood();
         this.nearFood = temp.distance;
         this.nearAngle = temp.angle;
 
@@ -219,8 +219,8 @@ class npc {
 
 var config = {
     type: Phaser.AUTO,
-    width: 3000,
-    height: 3000,
+    width: 600,
+    height: 800,
     physics: {
         default: 'arcade',
         arcade: {
@@ -251,10 +251,10 @@ function create() {
 
     this.time.addEvent({ delay: 3000, callback: createFood, callbackScope: this, loop: true });
     npcs = [];
-    runtimePrint("spawning 1000")
-    for (let i = 0; i < 1000; i++){
+    //runtimePrint("spawning 1000")
+    //for (let i = 0; i < 1000; i++){
         npcs.push(new npc(this, Phaser.Math.Between(0, config.width), Phaser.Math.Between(0, config.height), 54));
-    }
+    //}
     npcs[0].sprite.setScale(1);
     this.time.addEvent({ delay: 1000, callback: createFood, callbackScope: this, loop: true });
     this.time.addEvent({ delay: 1000, callback: tickHunger, callbackScope: this, loop: true }); 
