@@ -105,7 +105,7 @@ function create() {
   NEATstore[0] = new NEAT(NEATconfig);
 
   this.time.addEvent({
-    delay: 1000,
+    delay: 250,
     callback: createFood,
     callbackScope: this,
     loop: true,
