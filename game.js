@@ -1,6 +1,6 @@
 
 class npc {
-    constructor(scene, x, y) {
+    constructor(scene, x, y, brainSize) {
         this.scene = scene;
         this.sprite = scene.physics.add.sprite(x, y, 'dot');
         this.sprite.npc = this;
@@ -9,14 +9,15 @@ class npc {
         this.hunger = 75;
         scene.input.keyboard.on('keydown', this.handleKeyDown, this);
         this.Pangle = 0;
-        this.Brain = new Array(24);
+        this.Brain = new Array(brainSize);
         this.pX = 0;
         this.pY = 0;
         this.pNearFood = 0;        
         this.nearFood = 0;
+        this.nearAngle = 0;
 
         var randomArray = [];
-        for (var i = 0; i < 24; i++) {
+        for (var i = 0; i < brainSize; i++) {
             randomArray.push(Math.random());
         }
         this.Brain = randomArray;
@@ -29,6 +30,15 @@ class npc {
         this.sprite.setVelocityY(Math.sin(angle) * 200);
         
     }
+
+    movebackward() {
+
+        var angle = Phaser.Math.DegToRad(this.sprite.angle - 90);
+        this.sprite.setVelocityX(Math.cos(angle) * -200);
+        this.sprite.setVelocityY(Math.sin(angle) * -200);
+        
+    }
+
     turnleft() {
         this.Pangle = this.sprite.angle;
         this.sprite.angle -= 4;
@@ -40,14 +50,18 @@ class npc {
 
     NearestFood() {
         var nearestDist = Number.MAX_VALUE;
-        
+        var nearestAngle = 0;
         for(let foodItem of food.getChildren()){
         var dist = Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, foodItem.x, foodItem.y);
             if (dist < nearestDist) {
                 nearestDist = dist;
+                nearestAngle = Phaser.Math.Angle.Between(this.sprite.x, sthis.sprite.y, foodItem.x, foodItem.y);
             } 
         }
-        return nearestDist;//nearestDist;
+        return {
+            distance: nearestDist,
+            angle: nearestAngle
+        };
     }
 
     //generateRandomArray() {
@@ -73,6 +87,7 @@ class npc {
         input[5] = this.sprite.angle;
         input[6] = this.nearFood;
         input[7] = this.pNearFood;
+        input[8] = this.nearAngle;
 
         
         //const sliceSize = Math.ceil(this.Brain.length / 8);
@@ -118,8 +133,8 @@ class npc {
         }
 
         var counter = 0;
-        for (var i = 0; i < this.Brain.length; i += 3) {
-            var chunk = this.Brain.slice(i, i + 3);
+        for (var i = 0; i < this.Brain.length; i += 6) {
+            var chunk = this.Brain.slice(i, i + 6);
             var multipliedChunk = chunk.map(element => element * input[counter]);
             //var multipliedChunk = chunk.map((value, index) => value * input[index % input.length]);
             counter++;
@@ -150,8 +165,11 @@ class npc {
 
         this.pX = this.sprite.x;
         this.pY = this.sprite.y;
-        this.pNearFood = this.nearFood
-        this.nearFood = this.NearestFood()
+        this.pNearFood = this.nearFood;
+        var temp = this.NearestFood
+        this.nearFood = temp.distance;
+        this.nearAngle = temp.angle;
+
         
         var action = this.NeuralNetworkMove()
         if(action == 0){
@@ -160,7 +178,18 @@ class npc {
             this.turnright();
         }else if(action == 2){
             this.movefoward();
+        }else if(action == 3){
+            this.movebackward();
+        }else if(action == 4){ 
+            this.turnleft();
+            this.movefoward();
+        }else if(action == 5){
+            this.turnright();
+            this.movefoward();
         }
+
+
+
         this.checkBounds();
     }
 
@@ -224,7 +253,7 @@ function create() {
     npcs = [];
     runtimePrint("spawning 1000")
     for (let i = 0; i < 1000; i++){
-        npcs.push(new npc(this, Phaser.Math.Between(0, config.width), Phaser.Math.Between(0, config.height)));
+        npcs.push(new npc(this, Phaser.Math.Between(0, config.width), Phaser.Math.Between(0, config.height), 54));
     }
     npcs[0].sprite.setScale(1);
     this.time.addEvent({ delay: 1000, callback: createFood, callbackScope: this, loop: true });
@@ -275,4 +304,4 @@ function eatFood(sprite, food) {
 }
 
 runtimePrint = console.log;
-console.log = ()=>{}; //disable console.log
+//console.log = ()=>{}; //disable console.log
