@@ -99,3 +99,11 @@ h1 {
     font-size: 3em !important;
     border-style: dashed;
 }
+
+.title-bar {
+    background-color: #a9161d; /* replace with your desired color */
+    width: 100%;
+    text-align: center;
+    padding: 10px 0; /* adjust as needed */
+    border: 3px solid #be1e36
+  }
