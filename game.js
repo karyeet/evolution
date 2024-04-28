@@ -120,7 +120,6 @@ function tickHunger() {
     if (!tickedNPC) continue;
     tickedNPC.hunger -= 2;
     if (tickedNPC.hunger <= 0) {
-      console.log("NPC died" + npcs.length);
       tickedNPC.bar.clear();
       tickedNPC.bar_border.clear();
       tickedNPC.sprite.destroy();
@@ -130,28 +129,15 @@ function tickHunger() {
     }
     if (tickedNPC.hunger >= 100) {
       runtimePrint("hunger threshold hit");
-      console.log("tick round", Math.floor(npcs.length / TOTALkirbies));
-      console.log(
-        "does include, is rep round equal",
-        !whichhitTrigger.includes(index),
-        Math.floor((npcs.length - 1) / TOTALkirbies),
-        reproductionRound,
-      );
       if (
         !whichhitTrigger.includes(index) &&
         Math.floor((npcs.length - 1) / TOTALkirbies) == reproductionRound
       ) {
         whichhitTrigger.push(index);
       }
-      console.log(
-        whichhitTrigger.length,
-        repoductionTriggers[reproductionRound],
-      );
       if (whichhitTrigger.length >= repoductionTriggers[reproductionRound]) {
-        console.log("new round");
         reproductionRound++;
         whichhitTrigger = [];
-        console.log("add neat store");
         NEATstore[reproductionRound] = new NEAT(NEATconfig);
         NEATstore[reproductionRound].import(
           NEATstore[reproductionRound - 1].export(),
@@ -169,15 +155,11 @@ function tickHunger() {
       }
 
       for (let oldnpc of npcs) {
-        //console.log("limit/current ",reproductionRound*TOTALkirbies+TOTALkirbies, npcs.length)
         if (reproductionRound * TOTALkirbies + TOTALkirbies <= npcs.length) {
           break;
         }
-        console.log("did not break");
-        //console.log("conditions ",oldnpc, oldnpc.hunger, oldnpc.sprite)
         if (oldnpc && oldnpc.hunger >= 100 && oldnpc.sprite) {
           oldnpc.hunger = 75;
-          console.log("spawn");
           npcs.push(
             new npc(this, oldnpc.sprite.x, oldnpc.sprite.y, npcs.length),
           );
