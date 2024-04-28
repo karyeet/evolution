@@ -25,6 +25,7 @@ window.addEventListener('load', function () {
 
 });
 
+
 let NEATconfig = {
   model: [
     // Angle to nearest food relative to world, current angle
@@ -77,12 +78,6 @@ function create() {
   bg.displayHeight = this.sys.game.config.height;
   food = this.physics.add.group();
 
-  this.time.addEvent({
-    delay: 3000,
-    callback: createFood,
-    callbackScope: this,
-    loop: true,
-  });
   npcs = [];
 
   runtimePrint("spawning " + TOTALkirbies);
@@ -105,13 +100,7 @@ function create() {
   NEATstore[0] = new NEAT(NEATconfig);
 
   this.time.addEvent({
-    delay: 250,
-    callback: createFood,
-    callbackScope: this,
-    loop: true,
-  });
-  this.time.addEvent({
-    delay: 1000,
+    delay: 10000,
     callback: tickHunger,
     callbackScope: this,
     loop: true,
@@ -143,58 +132,62 @@ function update() {
 }
 
 function tickHunger() {
-  for (let index in npcs) {
-    let tickedNPC = npcs[index];
-    if (!tickedNPC) continue;
-    tickedNPC.hunger -= 2;
-    if (tickedNPC.hunger <= 0) {
-      tickedNPC.bar.destroy();
-      tickedNPC.sprite.destroy();
-      npcs[index] = undefined;
-      //npcs.splice(index, 1);
-      //delete spawnedNPC;
-    }
-    if (tickedNPC.hunger >= 100) {
-      runtimePrint("hunger threshold hit");
-      if (
-        !whichhitTrigger.includes(index) &&
-        Math.floor((npcs.length - 1) / TOTALkirbies) == reproductionRound
-      ) {
-        whichhitTrigger.push(index);
-      }
-      if (whichhitTrigger.length >= repoductionTriggers[reproductionRound]) {
-        reproductionRound++;
-        whichhitTrigger = [];
-        NEATstore[reproductionRound] = new NEAT(NEATconfig);
-        NEATstore[reproductionRound].import(
-          NEATstore[reproductionRound - 1].export(),
+  let overallhunger = 0;
+    for (let i = 0; i < npcs.length; i++) {
+      if (npcs[i]) {
+        NEATstore[0].setFitness(
+          npcs[i].hunger,
+          i % TOTALkirbies,
         );
-        for (let i = reproductionRound * TOTALkirbies; i < npcs.length; i++) {
-          if (npcs[i]) {
-            NEATstore[reproductionRound].setFitness(
-              npc.hunger,
-              Math.floor(i / TOTALkirbies),
-            );
-          }
-        }
-        NEATstore[reproductionRound].doGen();
-        //generational debt..
       }
-
-      for (let oldnpc of npcs) {
-        if (reproductionRound * TOTALkirbies + TOTALkirbies <= npcs.length) {
-          break;
-        }
-        if (oldnpc && oldnpc.hunger >= 100 && oldnpc.sprite) {
-          oldnpc.hunger = 75;
-          npcs.push(
-            new npc(this, oldnpc.sprite.x, oldnpc.sprite.y, npcs.length),
-          );
-        }
-      }
+      overallhunger += npcs[i].hunger;
+      npcs[i].bar.destroy();
+      npcs[i].sprite.destroy();
+      npcs[i] = undefined;
     }
-  }
-}
+    NEATstore[0].doGen();
+    if(NEATstore[0].generation == 10){
+      let B = NEATstore[0].export();
+      console.log(B);
+    }
+    for(let i = 0; i < food.getChildren().length; i++){
+      food.getChildren()[i].destroy();
+    }
+    for(let i = 0; i < food.getChildren().length; i++){
+      food.getChildren()[i].destroy();
+    }
+    for(let i = 0; i < food.getChildren().length; i++){
+      food.getChildren()[i].destroy();
+    }
+    for(let i = 0; i < food.getChildren().length; i++){
+      food.getChildren()[i].destroy();
+    }
+
+    npcs = [];
+    console.log(overallhunger/TOTALkirbies);
+    runtimePrint("spawning " + TOTALkirbies);
+  
+    for (let i = 0; i < TOTALkirbies; i++) {
+      npcs.push(
+        new npc(
+          this,
+          Phaser.Math.Between(0, config.width),
+          Phaser.Math.Between(0, config.height),
+          i,
+        ),
+      );
+    }
+    for (let i = 0; i < 300; i++) {
+      createFood();
+    }
+
+
+    // for (let foodItem of food.getChildren()){
+    //   foodItem.destroy();
+    // }
+
+
+    }
 
 function createFood() {
   const x = Phaser.Math.Between(0, config.width);
