@@ -172,8 +172,8 @@ function tickHunger() {
         for (let i = reproductionRound * TOTALkirbies; i < npcs.length; i++) {
           if (npcs[i]) {
             NEATstore[reproductionRound].setFitness(
-              npc.hunger,
-              Math.floor(i / TOTALkirbies),
+              npcs[i].hunger,
+              i % TOTALkirbies,
             );
           }
         }
