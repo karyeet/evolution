@@ -126,24 +126,25 @@ class npc {
             }
             
             return collapsedArray;
-
-    function indexOfMax(arr) {
-      if (arr.length === 0) {
-        return -1;
-      }
-
-      var max = arr[0];
-      var maxIndex = 0;
-
-      for (var i = 1; i < arr.length; i++) {
-        if (arr[i] > max) {
-          maxIndex = i;
-          max = arr[i];
         }
-      }
+        function indexOfMax(arr) {
+        if (arr.length === 0) {
+            return -1;
+        }
 
-      return maxIndex;
-    }
+        var max = arr[0];
+        var maxIndex = 0;
+
+        for (var i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+            }
+        }
+
+        return maxIndex;
+        }
+        
         var counter = 0;
         for (var i = 0; i < this.Brain.length; i += 6) {
             var chunk = this.Brain.slice(i, i + 6);
@@ -199,7 +200,7 @@ class npc {
             this.turnright();
             this.movefoward();
         }
-    }
+    
 
     this.checkBounds();
   }
@@ -337,7 +338,7 @@ function tickHunger() {
     //if(!spawnedNPC) continue;
     spawnedNPC.hunger -= 1;
     if (spawnedNPC.hunger <= 0) {
-      `spawnedNPC.bar.clear();
+      spawnedNPC.bar.clear();
       spawnedNPC.bar_border.clear();
       spawnedNPC.sprite.destroy();
       npcs.splice(index, 1);
