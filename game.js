@@ -1,5 +1,5 @@
 window.addEventListener('load', function () {
-  var canvas = document.querySelector('canvas');
+  let canvas = document.querySelector('canvas');
   if (canvas) {
     canvas.addEventListener('wheel', function (e) {
       window.scrollBy(0, e.deltaY);
@@ -67,7 +67,7 @@ function preload() {
 }
 
 let reproductionRound = 0; // how many rounds have passed
-let repoductionTriggers = [10, 10, 15, 20, 1, 1, 1, 1]; // hard coded trigger values
+let repoductionTriggers = [10, 10, 15, 20, 1, 1, 1, 1,1, 1, 1, 1,1, 1, 1, 1]; // hard coded trigger values
 let whichhitTrigger = []; // which hit trigger so they dont hit twice
 let NEATstore = []; // store the NEAT objects
 
@@ -105,7 +105,7 @@ function create() {
   NEATstore[0] = new NEAT(NEATconfig);
 
   this.time.addEvent({
-    delay: 250,
+    delay: 150,
     callback: createFood,
     callbackScope: this,
     loop: true,
@@ -162,7 +162,7 @@ function tickHunger() {
       ) {
         whichhitTrigger.push(index);
       }
-      if (whichhitTrigger.length >= repoductionTriggers[reproductionRound]) {
+      if (whichhitTrigger.length >= repoductionTriggers[reproductionRound] || reproductionRound > 5 && whichhitTrigger.length >= 1) {
         reproductionRound++;
         whichhitTrigger = [];
         NEATstore[reproductionRound] = new NEAT(NEATconfig);
