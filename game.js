@@ -120,7 +120,7 @@ function tickHunger() {
     if (!tickedNPC) continue;
     tickedNPC.hunger -= 2;
     if (tickedNPC.hunger <= 0) {
-      tickedNPC.bar.clear();;
+      tickedNPC.bar.destroy();
       tickedNPC.sprite.destroy();
       npcs[index] = undefined;
       //npcs.splice(index, 1);

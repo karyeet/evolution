@@ -34,9 +34,9 @@ class bar {
     this.bar.y = this.sprite.y;
   }
 
-  clear() {
-    this.bar_border.clear();
-    this.bar.clear();
+  destroy() {
+    this.bar_border.destroy();
+    this.bar.destroy();
   }
 }
 
