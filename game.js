@@ -1,7 +1,7 @@
 let NEATconfig = {
   model: [
     // Angle to nearest food relative to world, current angle
-    { nodeCount: 2, type: "input" },
+    { nodeCount: 3, type: "input" },
     { nodeCount: 2, type: "output", activationfunc: activation.SOFTMAX },
   ],
   mutationRate: 0.1,
@@ -120,8 +120,7 @@ function tickHunger() {
     if (!tickedNPC) continue;
     tickedNPC.hunger -= 2;
     if (tickedNPC.hunger <= 0) {
-      tickedNPC.bar.clear();
-      tickedNPC.bar_border.clear();
+      tickedNPC.bar.clear();;
       tickedNPC.sprite.destroy();
       npcs[index] = undefined;
       //npcs.splice(index, 1);

@@ -33,6 +33,11 @@ class bar {
     this.bar.x = this.sprite.x;
     this.bar.y = this.sprite.y;
   }
+
+  clear() {
+    this.bar_border.clear();
+    this.bar.clear();
+  }
 }
 
 function interpolate(color1, color2, percent) {

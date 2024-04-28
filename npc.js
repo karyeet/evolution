@@ -82,8 +82,8 @@ class npc {
       let generation = Math.floor(this.id / TOTALkirbies);
 
       NEATstore[generation].setInputs(
-        [this.nearAngle * 180, this.sprite.angle - 90],
-        this.id % TOTALkirbies,
+        [this.nearAngle * 180, this.sprite.angle - 90, Math.random() * 100],
+        this.id % TOTALkirbies
       );
 
       this.checkBounds();
