@@ -5,7 +5,7 @@ class npc {
         this.sprite = scene.physics.add.sprite(x, y, 'dot');
         this.sprite.npc = this;
         this.cursors = scene.input.keyboard.createCursorKeys();
-        this.hunger = 15;
+        this.hunger = 75;
         scene.input.keyboard.on('keydown', this.handleKeyDown, this);
 
     }
@@ -87,7 +87,7 @@ var npcs = [];
 var food;
 
 function preload() {
-    this.load.image('dot', './sprite1.png');
+    this.load.image('dot', './white_blood_cell_1.png');
     this.load.image('food', './hamburger.webp');
 }
 
@@ -115,7 +115,12 @@ function tickHunger() {
             spawnedNPC.sprite.destroy();
             npcs.splice(index, 1);
             delete spawnedNPC;
-        }  
+        }
+        if(spawnedNPC && spawnedNPC.hunger >= 150){
+            console.log("spawned")
+            npcs.push(new npc(this, spawnedNPC.sprite.x, spawnedNPC.sprite.y));
+            spawnedNPC.hunger = 40;
+        }
     }
 
 }
