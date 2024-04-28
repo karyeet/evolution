@@ -86,3 +86,16 @@ h1 {
     z-index: 1;
     pointer-events: none; 
 }
+
+.floating-text-box {
+    position: fixed;
+    left: 7%;
+    top: 37%;
+    transform: translateY(-50%);
+    background-color: white;
+    border: 3px solid red;
+    padding: 10px;
+    z-index: 2;
+    font-size: 3em !important;
+    border-style: dashed;
+}
