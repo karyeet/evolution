@@ -310,6 +310,8 @@ function tickHunger() {
     //if(!spawnedNPC) continue;
     spawnedNPC.hunger -= 1;
     if (spawnedNPC.hunger <= 0) {
+      `spawnedNPC.bar.clear();
+      spawnedNPC.bar_border.clear();
       spawnedNPC.sprite.destroy();
       npcs.splice(index, 1);
       delete spawnedNPC;
